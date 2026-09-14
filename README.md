@@ -1,224 +1,692 @@
-# KeroPro — projeto completo
+# KeroPro
 
-Marketplace mobile que conecta clientes a técnicos de TI e manutenção,
-com contratação orientada pelo algoritmo **Score de Excelência** (Content-Based
-Filtering). Este repositório reorganiza o protótipo em três camadas separadas,
-seguindo a stack pedida: **HTML + CSS + JavaScript/React** no front-end,
-**Java (Spring Boot)** no back-end e **MySQL** como banco de dados.
+## Marketplace de Serviços sob Demanda
 
-```
-keropro/
-├── database/       → schema.sql (DDL) e seed.sql (dados de demonstração)
-├── backend/        → API REST em Java 17 + Spring Boot + JPA
-├── frontend/       → interface do APP em React (build com npm), consome a API
-├── frontend-html/  → a MESMA interface do app em HTML + CSS + JS puro (sem build)
-└── site/           → site institucional (landing page + cadastro de
-                       cliente e de profissional), também em HTML + CSS + JS puro
-```
+O **KeroPro** é uma plataforma em desenvolvimento criada para conectar **clientes e profissionais de serviços sob demanda**, facilitando a busca, solicitação e acompanhamento de serviços de acordo com categoria, localização, disponibilidade e nível de urgência.
 
-Há duas coisas diferentes neste projeto:
+A proposta também contempla mecanismos de **validação profissional, avaliações, pontuação e organização das informações**, buscando oferecer mais segurança e praticidade para o cliente.
 
-- **`frontend/` e `frontend-html/`** — o **aplicativo** (app mobile), com os
-  fluxos de busca, contratação e acompanhamento de pedido.
-- **`site/`** — o **site institucional/marketing**, com a apresentação do
-  produto e os formulários de cadastro de cliente e de profissional. É por
-  aqui que uma pessoa nova conhece o KeroPro e cria a conta antes de baixar
-  o app.
+> 🚧 **Status do projeto:** Em desenvolvimento  
+> 📅 **Previsão de entrega da versão atual:** Outubro de 2026
 
-Há duas versões de front-end, ambas conversando com a mesma API Java:
+---
 
-- **`frontend/`** — React, precisa de `npm install` / `npm start`.
-- **`frontend-html/`** — HTML/CSS/JS puro, sem dependências. Basta abrir
-  `frontend-html/index.html` no navegador (ou servir a pasta com qualquer
-  servidor estático). Se a API Java não estiver rodando, ela funciona
-  sozinha em **modo offline**, usando os dados de `js/mock-data.js` — útil
-  para demonstrações rápidas sem precisar subir o back-end.
+## 🎯 Objetivo
 
-## 1. Banco de dados (MySQL)
+O objetivo do KeroPro é oferecer uma plataforma que facilite a conexão entre clientes que precisam de um serviço e profissionais disponíveis para atendê-los.
 
-```bash
-mysql -u root -p < database/schema.sql
-mysql -u root -p < database/seed.sql
-```
+A solução foi pensada para considerar diferentes informações durante esse processo, como:
 
-Isso cria o schema `keropro` com as tabelas `usuarios`, `clientes`,
-`profissionais`, `categorias`, `score_profissional`, `pedidos` e `avaliacoes`,
-já populadas com os dois personas da proposta (Mariana e Carlos) e mais três
-profissionais de exemplo.
+- Categoria do serviço;
+- Localização do cliente;
+- Localização do profissional;
+- Distância entre cliente e profissional;
+- Disponibilidade do profissional;
+- Nível de urgência;
+- Experiência profissional;
+- Formação e certificações;
+- Avaliações dos clientes;
+- Pontuação do profissional;
+- Informações utilizadas para apoiar a escolha do profissional.
 
-## 2. Back-end (Java / Spring Boot)
+---
 
-Requer Java 17+ e Maven.
+## 💡 Problema
 
-```bash
-cd backend
-# ajuste usuário/senha do MySQL em src/main/resources/application.properties
-mvn spring-boot:run
-```
+Encontrar um profissional para realizar um serviço pode ser uma tarefa desorganizada, principalmente quando existe necessidade de atendimento rápido, localização próxima e confiança nas informações apresentadas.
 
-A API sobe em `http://localhost:8080`. Principais endpoints:
+O KeroPro foi idealizado para centralizar essas informações em uma plataforma, permitindo que o cliente encontre profissionais de maneira mais organizada e tenha acesso a dados que possam auxiliar na tomada de decisão.
 
-| Método | Rota                                   | Descrição                                             |
-|--------|-----------------------------------------|--------------------------------------------------------|
-| POST   | `/api/auth/login`                       | Autentica cliente ou profissional                      |
-| GET    | `/api/categorias`                       | Lista categorias de serviço                             |
-| GET    | `/api/profissionais?categoria=&clienteLat=&clienteLng=&emergencia=` | Lista profissionais ranqueados por Score de Excelência, com distância (Haversine) e orçamento calculados |
-| GET    | `/api/pedidos/pendentes/{profissionalId}` | Pedidos pendentes de um profissional (painel)         |
-| POST   | `/api/pedidos`                          | Cliente contrata um profissional                        |
-| PATCH  | `/api/pedidos/{id}/avancar`             | Avança o status do pedido (simula sincronização em tempo real) |
+---
 
-A lógica de negócio fica isolada em `service/`:
-- `ScoreService.java` — calcula o Score de Excelência a partir de formação, certificações, avaliações e tempo de resposta.
-- `OrcamentoService.java` — distância via GPS (Haversine) e preço estimado.
-- `PedidoService.java` — máquina de estados do pedido.
+## 🚀 Proposta da solução
 
-## 3. Front-end — versão React (build com npm)
+A plataforma está sendo desenvolvida para permitir que o cliente possa:
 
-Requer Node.js 18+.
+1. Realizar seu cadastro;
+2. Buscar profissionais de acordo com a categoria do serviço;
+3. Consultar informações do profissional;
+4. Considerar localização e distância;
+5. Verificar disponibilidade;
+6. Solicitar um serviço;
+7. Informar o nível de urgência;
+8. Acompanhar o andamento da solicitação;
+9. Avaliar o profissional após a realização do serviço.
 
-```bash
-cd frontend
-npm install
-npm start
-```
+Para os profissionais, a proposta contempla recursos relacionados ao cadastro, informações profissionais, formação, certificações, disponibilidade e localização.
 
-Abre em `http://localhost:3000` e consome a API acima. Estrutura detalhada em
-`frontend/README.md`.
+---
 
-## 4. Front-end — versão HTML/CSS/JS puro (sem build)
+# 🏗️ Arquitetura do projeto
 
-Não precisa de Node nem de `npm install`. Duas formas de usar:
+O projeto está sendo organizado em diferentes componentes, buscando separar as responsabilidades da aplicação.
 
-```bash
-# Opção 1: abrir direto
-open frontend-html/index.html          # macOS
-# ou apenas dar duplo-clique no arquivo
-
-# Opção 2: servir como página estática (recomendado, evita restrições de CORS)
-cd frontend-html
-python3 -m http.server 5500
-# depois acesse http://localhost:5500
+```text
+KeroPro
+│
+├── Frontend
+│   └── Interface da aplicação
+│
+├── Backend
+│   ├── Controllers
+│   ├── Services
+│   ├── Repositories
+│   ├── DTOs
+│   ├── Models
+│   └── Configurações
+│
+├── Database
+│   ├── schema.sql
+│   └── seed.sql
+│
+└── Integrações
+    ├── Firebase
+    └── Google Maps API
 ```
 
-Estrutura:
+O backend utiliza uma organização em camadas, separando responsabilidades entre **controllers, services, repositories, DTOs e models**.
 
+---
+
+# ⚙️ Backend
+
+O backend está sendo desenvolvido utilizando **Java e Spring Boot**.
+
+A estrutura atual está organizada da seguinte forma:
+
+```text
+backend/
+└── src/
+    └── main/
+        └── java/
+            └── com/
+                └── keropro/
+                    ├── config/
+                    ├── controller/
+                    ├── dto/
+                    ├── model/
+                    ├── repository/
+                    └── service/
 ```
+
+## Controllers
+
+A camada de controllers é responsável pelo recebimento das requisições da aplicação e pela exposição dos endpoints.
+
+Atualmente existem estruturas relacionadas a:
+
+- Autenticação;
+- Cadastro;
+- Clientes;
+- Categorias;
+- Pedidos;
+- Profissionais.
+
+---
+
+## Services
+
+A camada de services concentra regras e operações relacionadas ao funcionamento da aplicação.
+
+Entre as estruturas existentes estão serviços relacionados a:
+
+- Pedidos;
+- Orçamentos;
+- Score dos profissionais.
+
+O `OrcamentoService`, por exemplo, possui lógica relacionada ao cálculo de distância entre coordenadas geográficas e ao cálculo de orçamento estimado.
+
+---
+
+## Repositories
+
+A camada de repositories é responsável pela persistência e consulta dos dados.
+
+O projeto utiliza **Spring Data JPA** para trabalhar com o banco de dados.
+
+Entre os repositories existentes estão estruturas relacionadas a:
+
+- Usuários;
+- Clientes;
+- Endereços;
+- Categorias;
+- Profissionais;
+- Pedidos.
+
+---
+
+## DTOs
+
+O projeto utiliza **Data Transfer Objects (DTOs)** para organizar os dados utilizados nas requisições e respostas da aplicação.
+
+Também existem validações utilizando recursos do Jakarta Validation.
+
+Entre os DTOs existentes estão estruturas relacionadas a:
+
+- Cadastro de clientes;
+- Cadastro de profissionais;
+- Login;
+- Pedidos;
+- Endereços;
+- Formação;
+- Respostas da aplicação.
+
+---
+
+# 🗄️ Banco de dados
+
+O KeroPro possui um esquema de banco de dados desenvolvido em **MySQL 8+**.
+
+O arquivo principal de estruturação é:
+
+```text
+database/
+├── schema.sql
+└── seed.sql
+```
+
+O `schema.sql` contém a criação do banco, tabelas, relacionamentos, restrições e índices.
+
+---
+
+## 📊 Principais entidades
+
+### Usuários
+
+A tabela `usuarios` representa a base comum de autenticação para clientes e profissionais.
+
+Entre os dados estruturados estão:
+
+- Nome;
+- E-mail;
+- Senha armazenada como hash;
+- Tipo de usuário;
+- CPF;
+- CNPJ;
+- Telefone;
+- Data de nascimento;
+- Consentimento LGPD;
+- Aceite de termos;
+- Preferência de marketing;
+- Informações relacionadas ao login.
+
+---
+
+### Clientes
+
+A tabela `clientes` representa o perfil específico do cliente associado ao usuário.
+
+---
+
+### Profissionais
+
+A tabela `profissionais` contém informações específicas dos profissionais cadastrados na plataforma.
+
+Entre elas:
+
+- Categoria;
+- Especialidade;
+- Anos de experiência;
+- Raio de atendimento;
+- Biografia;
+- Instituição de formação;
+- Curso de formação;
+- Ano de conclusão;
+- Certificações;
+- Latitude;
+- Longitude;
+- Preço base;
+- Status de verificação;
+- Disponibilidade.
+
+---
+
+### Categorias
+
+A tabela `categorias` organiza os diferentes tipos de serviços oferecidos na plataforma.
+
+---
+
+### Endereços
+
+A tabela `enderecos` armazena os dados de endereço associados aos usuários.
+
+---
+
+### Comprovantes
+
+A tabela `comprovantes` foi estruturada para registrar documentos enviados pelo profissional, como:
+
+- Diplomas;
+- Certificados;
+- Outros comprovantes.
+
+O arquivo físico é previsto para ser armazenado externamente, enquanto o banco mantém sua referência.
+
+---
+
+### Pedidos
+
+A tabela `pedidos` representa as solicitações de serviço realizadas pelos clientes.
+
+Um pedido possui informações como:
+
+- Cliente;
+- Profissional;
+- Categoria;
+- Descrição;
+- Status;
+- Distância;
+- Valor estimado;
+- Indicação de emergência;
+- Data de criação;
+- Data de atualização.
+
+Os status previstos incluem:
+
+```text
+PENDENTE
+ACEITO
+A_CAMINHO
+EM_EXECUCAO
+CONCLUIDO
+```
+
+---
+
+### Avaliações
+
+A tabela `avaliacoes` representa o feedback realizado pelo cliente após um serviço.
+
+Cada avaliação possui:
+
+- Nota;
+- Comentário;
+- Data da avaliação.
+
+A nota é estruturada em uma escala de **1 a 5**.
+
+---
+
+### Score do profissional
+
+O projeto possui uma estrutura específica para o **Score de Excelência** dos profissionais.
+
+O score considera componentes relacionados a:
+
+- Formação;
+- Certificações;
+- Avaliações;
+- Tempo de resposta;
+- Score total.
+
+A estrutura permite que essas informações sejam utilizadas futuramente no processo de classificação dos profissionais.
+
+---
+
+# 📍 Localização
+
+A localização é um dos elementos importantes da proposta do KeroPro.
+
+O projeto possui estrutura para trabalhar com:
+
+- Latitude;
+- Longitude;
+- Distância entre pontos;
+- Raio de atendimento;
+- Localização do profissional;
+- Localização do cliente.
+
+O backend possui uma implementação para cálculo de distância geográfica entre coordenadas utilizando a **fórmula de Haversine**.
+
+A solução também contempla integração com recursos da **Google Maps API**.
+
+---
+
+# 🔐 Segurança
+
+A segurança é considerada na estrutura atual do projeto.
+
+Entre os recursos existentes ou estruturados estão:
+
+- Armazenamento de senha através de `senha_hash`;
+- Utilização de `BCryptPasswordEncoder`;
+- Validação de dados através de DTOs;
+- Controle de tipos de usuários;
+- Estrutura para validação de profissionais;
+- Registro de comprovantes;
+- Controle relacionado ao consentimento LGPD;
+- Controle de tentativas de login.
+
+O projeto também possui uma estrutura inicial relacionada ao Spring Security.
+
+### Autenticação
+
+A autenticação completa com token ainda faz parte da evolução do projeto.
+
+A implementação atual contém uma estrutura inicial para autenticação e segurança, mas determinados mecanismos ainda serão desenvolvidos e integrados durante a evolução da aplicação.
+
+> **Importante:** funcionalidades que ainda estão em desenvolvimento não são apresentadas como concluídas.
+
+---
+
+# ⭐ Avaliações e Score
+
+O sistema foi projetado para utilizar as avaliações dos clientes como uma das informações utilizadas na composição do desempenho do profissional.
+
+O modelo contempla:
+
+```text
+Formação
+    +
+Certificações
+    +
+Avaliações
+    +
+Tempo de resposta
+    ↓
+Score do profissional
+```
+
+A estrutura está preparada para que o score seja calculado e atualizado conforme a evolução das regras de negócio.
+
+---
+
+# 💰 Orçamento
+
+O projeto possui uma estrutura de serviço destinada ao cálculo de orçamento.
+
+O `OrcamentoService` trabalha com informações como:
+
+- Distância entre cliente e profissional;
+- Taxa por quilômetro;
+- Valor base;
+- Multiplicador de emergência.
+
+O cálculo de distância utiliza coordenadas geográficas e a fórmula de Haversine.
+
+---
+
+# 🌐 Frontend
+
+O repositório também possui uma estrutura de frontend em:
+
+- HTML5;
+- CSS3;
+- JavaScript.
+
+Estrutura atual:
+
+```text
 frontend-html/
-├── index.html          # marcação da página, carrega css e js
+├── assets/
 ├── css/
-│   └── style.css        # todo o estilo visual (tokens, layout, telas)
-└── js/
-    ├── mock-data.js      # dados de fallback + fórmulas replicadas do back-end
-    ├── api.js             # chamadas fetch para a API Java
-    ├── ui.js               # ícones SVG e funções que geram HTML (gauge, stepper, mapa…)
-    └── app.js               # estado da aplicação, navegação e eventos de clique
-```
-
-Essa versão tenta sempre falar com a API Java em `http://localhost:8080/api`.
-Se a API não responder, ela cai automaticamente para os dados de
-`mock-data.js` (mostrando um aviso "modo offline" na tela), então dá para
-testar a interface completa mesmo sem MySQL/back-end rodando.
-
-## Fluxo de demonstração
-
-1. Suba o MySQL com o schema/seed, depois o back-end, depois o front-end.
-2. Na tela inicial, entre como **Cliente** → escolha uma categoria → veja os
-   profissionais ranqueados pelo Score de Excelência → abra o perfil de um
-   deles → "Contratar agora" grava um pedido real no MySQL via API.
-3. Acompanhe o status do pedido avançando manualmente (simula os updates que,
-   em produção, viriam de um serviço de tempo real).
-4. Saia e entre como **Profissional** para ver o painel com os pedidos
-   pendentes vindos do banco e aceitar um deles.
-
-## 5. Site institucional + cadastro (`site/`)
-
-Também é HTML/CSS/JS puro, sem build. Para rodar:
-
-```bash
-cd site
-python3 -m http.server 5500
-# depois acesse http://localhost:5500
-```
-
-```
-site/
-├── index.html               # landing page (hero, features, Score de Excelência,
-│                             #   personas, seção de download do app, FAQ)
-├── cadastro-cliente.html     # cadastro completo de cliente
-├── cadastro-prestador.html    # cadastro completo de profissional (formação/certificações)
-├── css/
-│   ├── variables.css          # tokens de marca
-│   ├── base.css                # reset, tipografia, grid
-│   ├── components.css           # navbar, botões, cards, steps, footer…
-│   └── pages.css                 # hero, seções da home e layout dos formulários
 ├── js/
-│   ├── icons.js                  # biblioteca de ícones SVG inline
-│   ├── main.js                    # animações de entrada, FAQ, gauge decorativo do hero
-│   ├── validation.js               # CPF/CNPJ (módulo 11), máscaras, força de senha
-│   ├── auth-api.js                  # chamadas fetch para /api/auth/cadastro/*
-│   ├── cadastro-cliente.js           # validação + envio do form de cliente
-│   └── cadastro-prestador.js          # idem, + toggle CPF/CNPJ e upload de comprovantes
-└── assets/
-    ├── logo-mark.png, favicon.png, apple-touch-icon.png, og-image.png
+└── index.html
 ```
 
-### O que os cadastros pedem
+A evolução da solução também contempla o desenvolvimento utilizando:
 
-- **Cliente**: dados pessoais (nome, CPF, nascimento, e-mail, telefone),
-  endereço completo, senha com medidor de força, aceite de Termos e de LGPD,
-  opt-in de marketing (opcional).
-- **Profissional**: os mesmos dados pessoais (CPF **ou** CNPJ, com toggle),
-  categoria/especialidade, anos de experiência, raio de atendimento, bio,
-  **formação acadêmica e certificações** (que alimentam o Score de
-  Excelência), upload de comprovantes, endereço, senha, e três consentimentos
-  obrigatórios (Termos, LGPD e autorização de verificação de dados).
+- Flutter;
+- Dart.
 
-### Segurança implementada
+---
 
-- **Senha nunca em texto puro**: o back-end usa `BCryptPasswordEncoder`
-  (`SecurityConfig.java`) para gerar o hash antes de gravar no MySQL.
-- **Validação em duas camadas**: o front-end valida em tempo real (CPF/CNPJ
-  por módulo 11, e-mail, idade mínima de 18 anos, força de senha, telefone,
-  CEP) e o back-end **revalida tudo de novo** via Bean Validation
-  (`@NotBlank`, `@Pattern`, `@Email`, `@AssertTrue` para os consentimentos) —
-  nunca confie só no front-end.
-- **E-mail e CPF/CNPJ únicos**, checados no banco antes de criar a conta.
-- **Honeypot anti-bot**: campo invisível (`name="website"`) nos dois
-  formulários; se vier preenchido, o envio é silenciosamente descartado.
-- **LGPD**: consentimento explícito e obrigatório, com timestamp gravado em
-  `termos_aceitos_em`; coleta de dados limitada à finalidade declarada.
-- **Verificação de profissionais**: todo cadastro de prestador nasce com
-  `status_verificacao = PENDENTE` e `disponivel = false` — só aparece para
-  clientes depois de uma validação manual da formação/certificações
-  informadas (endpoint de aprovação fica como próximo passo natural do
-  back-end).
-- Endpoints: `POST /api/auth/cadastro/cliente` e
-  `POST /api/auth/cadastro/profissional`, ambos em
-  `RegisterController.java`.
+# 🛠️ Tecnologias
 
-### O que fica como próximo passo (fora do escopo deste protótipo)
+## Backend
 
-- Upload real dos arquivos de comprovante para um storage (S3, disco) — hoje
-  o formulário já monta a UI e envia a contagem de arquivos, mas o
-  armazenamento físico não está implementado.
-- Geocodificação do endereço informado no cadastro (hoje o profissional
-  recebe coordenadas provisórias do centro de Sorocaba até isso ser feito).
-- Um painel administrativo para aprovar/rejeitar profissionais pendentes.
-- Autenticação por sessão/JWT no login (hoje o login devolve um token
-  fictício — ver `AuthController.java`).
+- Java
+- Spring Boot
+- Spring Data JPA
+- Spring Security
+- BCrypt
+- Maven
 
-## Identidade visual
+## Banco de dados
 
-A logo (marca "P" com seta de crescimento, pin de localização e estrela) e a
-paleta de cores do site e do app — navy `#071B3A`, azul vívido `#00A3E0` e
-dourado `#F5A623` — foram extraídas diretamente do arquivo de logo oficial do
-projeto, para manter tudo consistente entre o site institucional e o
-aplicativo.
+- MySQL 8+
 
-## Observações
+## Frontend e aplicações
 
-- Este é um projeto acadêmico/protótipo: autenticação, senha e token são
-  simplificados (sem BCrypt/JWT) e alguns valores (coordenadas do cliente,
-  IDs de sessão) estão fixos no front-end para fins de demonstração.
-- A integração de mapa é uma representação visual simplificada; a proposta
-  original prevê uso do OpenStreetMap via Flutter/Dart em um app nativo.
+- Flutter
+- Dart
+- HTML5
+- CSS3
+- JavaScript
+
+## Integrações
+
+- Firebase
+- Google Maps API
+
+## Ferramentas
+
+- Git
+- GitHub
+
+---
+
+# 📂 Estrutura do repositório
+
+```text
+Kero_Pro_Prati/
+│
+├── backend/
+│   ├── src/
+│   │   └── main/
+│   │       └── java/
+│   │           └── com/
+│   │               └── keropro/
+│   │                   ├── config/
+│   │                   ├── controller/
+│   │                   ├── dto/
+│   │                   ├── model/
+│   │                   ├── repository/
+│   │                   └── service/
+│   │
+│   ├── resources/
+│   └── pom.xml
+│
+├── database/
+│   ├── schema.sql
+│   └── seed.sql
+│
+├── frontend-html/
+│   ├── assets/
+│   ├── css/
+│   ├── js/
+│   └── index.html
+│
+├── site/
+│
+└── README.md
+```
+
+---
+
+# 🔄 Estratégia de desenvolvimento
+
+O desenvolvimento atual utiliza branches para separar a versão principal do desenvolvimento.
+
+## Branch principal
+
+```text
+main
+```
+
+A `main` representa a versão principal do projeto.
+
+## Branch de desenvolvimento
+
+```text
+dev
+```
+
+A `dev` é utilizada para desenvolvimento, testes e integração das novas funcionalidades.
+
+Fluxo de trabalho:
+
+```text
+dev
+ ↓
+Desenvolvimento
+ ↓
+Testes
+ ↓
+Revisão
+ ↓
+Merge
+ ↓
+main
+```
+
+Essa organização permite trabalhar nas funcionalidades sem alterar diretamente a versão principal do projeto.
+
+---
+
+# 👥 Desenvolvimento colaborativo
+
+O KeroPro está sendo desenvolvido de forma colaborativa na etapa atual.
+
+As atividades envolvem:
+
+- Evolução da solução;
+- Discussão de requisitos;
+- Definição de regras de negócio;
+- Desenvolvimento do backend;
+- Estruturação do banco de dados;
+- Desenvolvimento do frontend;
+- Integração das funcionalidades;
+- Testes;
+- Organização do código utilizando Git e GitHub.
+
+A equipe atual trabalha na evolução do projeto visando a entrega prevista para outubro de 2026.
+
+---
+
+# 📈 Evolução do projeto
+
+O KeroPro teve sua origem durante a formação em **Análise e Desenvolvimento de Sistemas**.
+
+A ideia foi inicialmente desenvolvida em uma etapa acadêmica e posteriormente retomada para uma nova fase de desenvolvimento colaborativo.
+
+Na etapa atual, o projeto está passando por evolução da arquitetura, revisão de requisitos, estruturação do backend, banco de dados, frontend e regras de negócio.
+
+A proposta original também vem sendo ampliada com recursos relacionados a:
+
+- Geolocalização;
+- Disponibilidade em tempo real;
+- Urgência;
+- Validação profissional;
+- Certificações;
+- Avaliações;
+- Score;
+- Segurança;
+- Integração entre diferentes componentes da aplicação.
+
+---
+
+# 📚 Principais aprendizados
+
+O desenvolvimento do KeroPro proporciona experiência prática em diferentes etapas da construção de uma solução de software.
+
+Entre os principais aprendizados estão:
+
+- Análise de sistemas;
+- Levantamento de requisitos;
+- Identificação de regras de negócio;
+- Modelagem de dados;
+- Desenvolvimento de software;
+- Desenvolvimento de APIs;
+- Organização de aplicações em camadas;
+- Persistência de dados;
+- Validação de informações;
+- Segurança;
+- Geolocalização;
+- Integração entre sistemas;
+- Trabalho colaborativo;
+- Controle de versões com Git e GitHub.
+
+---
+
+# 🚧 Status atual
+
+O KeroPro está em desenvolvimento.
+
+### Atualmente estruturado
+
+- Arquitetura inicial do backend;
+- Organização por camadas;
+- Controllers;
+- Services;
+- Repositories;
+- DTOs;
+- Models;
+- Estrutura do banco de dados;
+- Relacionamentos entre entidades;
+- Validações;
+- BCrypt para hash de senhas;
+- Cálculo de distância geográfica;
+- Estrutura inicial de autenticação;
+- Estrutura para validação de profissionais;
+- Estrutura para avaliações;
+- Estrutura para score dos profissionais.
+
+### Em desenvolvimento
+
+- Integração completa entre frontend, backend e banco de dados;
+- Evolução da autenticação;
+- Fluxo completo de cadastro;
+- Validação dos profissionais;
+- Implementação e integração das funcionalidades;
+- Testes;
+- Refinamento das regras de negócio.
+
+### Próximas etapas
+
+- Continuidade do desenvolvimento;
+- Integração dos componentes;
+- Testes das funcionalidades;
+- Correção e refinamento;
+- Preparação da versão final para entrega.
+
+---
+
+# 🎓 Contexto acadêmico e profissional
+
+O KeroPro representa uma etapa importante da minha formação e da minha transição de carreira para Tecnologia.
+
+Durante a formação em **Análise e Desenvolvimento de Sistemas**, tive contato com diferentes etapas de desenvolvimento de software e participei da concepção e evolução da solução.
+
+O projeto também permitiu aplicar conhecimentos relacionados à análise de sistemas, desenvolvimento, banco de dados, regras de negócio e trabalho colaborativo.
+
+A experiência adquirida durante o desenvolvimento do KeroPro contribui para minha preparação para oportunidades nas áreas de **Análise de Sistemas, Dados e Desenvolvimento de Software**.
+
+---
+
+# 📌 Observação
+
+Este README descreve o estado atual e a proposta de evolução do projeto.
+
+Como o KeroPro ainda está em desenvolvimento, algumas funcionalidades apresentadas representam **estruturas já implementadas, parcialmente implementadas ou previstas na evolução da solução**.
+
+A documentação será atualizada conforme novas funcionalidades forem desenvolvidas, testadas e integradas.
+
+---
+
+## 👤 Autor
+
+**Celso Batista de Oliveira**
+
+Tecnólogo em Análise e Desenvolvimento de Sistemas
+
+- GitHub: [Celsoibiuna](https://github.com/Celsoibiuna)
+- LinkedIn: [Celso Batista de Oliveira](https://www.linkedin.com/in/celso-batista-de-oliveira-b513612b6/)
+- Portfólio: [por-tfo-lio-atualizado.vercel.app](https://por-tfo-lio-atualizado.vercel.app/)
+
+---
+
+## 📄 Licença
+
+Este projeto foi desenvolvido no contexto acadêmico e de formação profissional.
