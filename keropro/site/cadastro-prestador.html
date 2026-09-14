@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#071b3a" />
+<title>Criar conta de profissional — KeroPro</title>
+<meta name="description" content="Cadastre-se como profissional no KeroPro, valorize sua formação técnica e receba pedidos por região." />
+<link rel="icon" type="image/png" href="assets/favicon.png" />
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/variables.css" />
+<link rel="stylesheet" href="css/base.css" />
+<link rel="stylesheet" href="css/components.css" />
+<link rel="stylesheet" href="css/pages.css" />
+</head>
+<body>
+
+<header class="auth-header">
+  <div class="container">
+    <a href="index.html" class="brand"><img src="assets/logo-mark.png" alt="KeroPro" /><span class="brand-word">KeroPro</span></a>
+    <a href="cadastro-cliente.html" class="btn btn-ghost-dark">É cliente? Cadastre-se aqui</a>
+  </div>
+</header>
+
+<div class="auth-layout">
+  <!-- ============================= FORM ============================= -->
+  <div class="auth-form-col">
+    <div class="auth-kicker">CADASTRO · PROFISSIONAL</div>
+    <h1 class="auth-title">Cadastre seu perfil profissional</h1>
+    <p class="auth-subtitle">Suas informações de formação e certificação alimentam diretamente o seu Score de Excelência.</p>
+
+    <div class="form-msg" id="form-msg"></div>
+
+    <form id="prestador-form" novalidate>
+      <div class="hp-field"><label>Deixe em branco</label><input type="text" name="website" tabindex="-1" autocomplete="off" /></div>
+
+      <fieldset class="fieldset">
+        <legend>Dados pessoais</legend>
+        <div class="form-grid">
+          <div class="field span-2">
+            <label for="nome">Nome completo</label>
+            <input id="nome" name="nome" type="text" autocomplete="name" required />
+            <span class="field-error">Informe seu nome completo.</span>
+          </div>
+
+          <div class="field span-2">
+            <label>Documento</label>
+            <div class="seg-control" id="doc-toggle">
+              <button type="button" class="is-active" data-doc="cpf">CPF (autônomo)</button>
+              <button type="button" data-doc="cnpj">CNPJ (MEI)</button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="documento" id="documento-label">CPF</label>
+            <input id="documento" name="documento" type="text" inputmode="numeric" placeholder="000.000.000-00" required />
+            <span class="field-error">Documento inválido.</span>
+          </div>
+          <div class="field">
+            <label for="nascimento">Data de nascimento</label>
+            <input id="nascimento" name="nascimento" type="date" required />
+            <span class="field-error">É necessário ter 18 anos ou mais.</span>
+          </div>
+          <div class="field span-2">
+            <label for="email">E-mail</label>
+            <input id="email" name="email" type="email" autocomplete="email" required />
+            <span class="field-error">Informe um e-mail válido.</span>
+          </div>
+          <div class="field span-2">
+            <label for="telefone">Telefone / WhatsApp</label>
+            <input id="telefone" name="telefone" type="tel" inputmode="numeric" placeholder="(15) 90000-0000" required />
+            <span class="field-error">Informe um telefone válido com DDD.</span>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="fieldset">
+        <legend>Atuação profissional</legend>
+        <div class="form-grid">
+          <div class="field">
+            <label for="categoria">Categoria principal</label>
+            <select id="categoria" name="categoria" required>
+              <option value="">Selecione…</option>
+              <option value="eletrica">Elétrica</option>
+              <option value="hidraulica">Hidráulica</option>
+              <option value="ti">TI & Redes</option>
+              <option value="clima">Ar-condicionado</option>
+              <option value="reforma">Reformas</option>
+            </select>
+            <span class="field-error">Selecione sua categoria principal.</span>
+          </div>
+          <div class="field">
+            <label for="especialidade">Título profissional</label>
+            <input id="especialidade" name="especialidade" type="text" placeholder="Ex.: Técnico Eletricista" required />
+            <span class="field-error">Informe seu título profissional.</span>
+          </div>
+          <div class="field">
+            <label for="experiencia">Anos de experiência</label>
+            <input id="experiencia" name="experiencia" type="number" min="0" max="60" required />
+            <span class="field-error">Informe um número válido.</span>
+          </div>
+          <div class="field">
+            <label for="raio">Raio de atendimento (km)</label>
+            <input id="raio" name="raio" type="number" min="1" max="100" value="10" required />
+          </div>
+          <div class="field span-2">
+            <label for="bio">Sobre você <span class="optional">opcional</span></label>
+            <textarea id="bio" name="bio" placeholder="Conte sua trajetória, diferenciais e tipos de serviço que mais realiza."></textarea>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="fieldset">
+        <legend>Formação e certificações</legend>
+        <div class="form-grid">
+          <div class="field span-2">
+            <label for="instituicao">Instituição de formação</label>
+            <input id="instituicao" name="instituicao" type="text" placeholder="Ex.: SENAI Sorocaba" required />
+            <span class="field-error">Informe a instituição de formação.</span>
+          </div>
+          <div class="field">
+            <label for="curso">Curso / formação técnica</label>
+            <input id="curso" name="curso" type="text" placeholder="Ex.: Técnico em Eletrotécnica" required />
+            <span class="field-error">Informe o curso realizado.</span>
+          </div>
+          <div class="field">
+            <label for="anoConclusao">Ano de conclusão</label>
+            <input id="anoConclusao" name="anoConclusao" type="number" min="1970" max="2026" required />
+            <span class="field-error">Informe um ano válido.</span>
+          </div>
+          <div class="field span-2">
+            <label for="certificacoes">Certificações adicionais <span class="optional">opcional</span></label>
+            <input id="certificacoes" name="certificacoes" type="text" placeholder="Separe por vírgula. Ex.: NR-10, NR-35" />
+          </div>
+          <div class="field span-2">
+            <label>Comprovantes (diploma, certificados) <span class="optional">opcional</span></label>
+            <label class="file-drop" id="file-drop">
+              <input type="file" id="arquivos" name="arquivos" multiple accept=".pdf,.jpg,.jpeg,.png" />
+              <span><i data-icon="upload"></i></span><br />
+              Clique para enviar ou arraste os arquivos aqui (PDF, JPG ou PNG)
+            </label>
+            <div class="file-drop-list" id="file-drop-list"></div>
+            <span class="field-hint">Usados apenas para validação manual da nossa equipe — não ficam públicos no seu perfil.</span>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="fieldset">
+        <legend>Endereço de atuação</legend>
+        <div class="form-grid">
+          <div class="field">
+            <label for="cep">CEP</label>
+            <input id="cep" name="cep" type="text" inputmode="numeric" placeholder="00000-000" required />
+            <span class="field-error">Informe um CEP válido.</span>
+          </div>
+          <div class="field">
+            <label for="estado">Estado</label>
+            <select id="estado" name="estado" required>
+              <option value="SP" selected>São Paulo</option>
+              <option value="RJ">Rio de Janeiro</option>
+              <option value="MG">Minas Gerais</option>
+              <option value="PR">Paraná</option>
+              <option value="SC">Santa Catarina</option>
+              <option value="RS">Rio Grande do Sul</option>
+              <option value="OUTRO">Outro</option>
+            </select>
+          </div>
+          <div class="field span-2">
+            <label for="cidade">Cidade base</label>
+            <input id="cidade" name="cidade" type="text" value="Sorocaba" required />
+          </div>
+          <div class="field span-2">
+            <label for="logradouro">Rua / Avenida</label>
+            <input id="logradouro" name="logradouro" type="text" required />
+            <span class="field-error">Informe o logradouro.</span>
+          </div>
+          <div class="field">
+            <label for="numero">Número</label>
+            <input id="numero" name="numero" type="text" required />
+            <span class="field-error">Informe o número.</span>
+          </div>
+          <div class="field">
+            <label for="complemento">Complemento <span class="optional">opcional</span></label>
+            <input id="complemento" name="complemento" type="text" />
+          </div>
+          <div class="field span-2">
+            <label for="bairro">Bairro</label>
+            <input id="bairro" name="bairro" type="text" required />
+            <span class="field-error">Informe o bairro.</span>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="fieldset">
+        <legend>Segurança da conta</legend>
+        <div class="form-grid">
+          <div class="field">
+            <label for="senha">Senha</label>
+            <input id="senha" name="senha" type="password" autocomplete="new-password" required />
+            <div class="pw-strength" id="pw-strength">
+              <div class="pw-strength-bar"></div><div class="pw-strength-bar"></div><div class="pw-strength-bar"></div><div class="pw-strength-bar"></div>
+            </div>
+            <div class="pw-strength-label" id="pw-strength-label">Mínimo de 8 caracteres, misture letras, números e símbolos.</div>
+            <span class="field-error">A senha deve ter ao menos 8 caracteres.</span>
+          </div>
+          <div class="field">
+            <label for="confirmar-senha">Confirmar senha</label>
+            <input id="confirmar-senha" name="confirmarSenha" type="password" autocomplete="new-password" required />
+            <span class="field-error">As senhas não conferem.</span>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="consent">
+        <input type="checkbox" id="termos" name="termos" required />
+        <label for="termos">Li e concordo com os <a href="#">Termos de Uso</a> e a <a href="#">Política de Privacidade</a> do KeroPro.</label>
+      </div>
+      <div class="consent">
+        <input type="checkbox" id="lgpd" name="lgpd" required />
+        <label for="lgpd">Autorizo o tratamento dos meus dados pessoais conforme a <strong>LGPD</strong>, para os fins de intermediação de serviços descritos na política de privacidade.</label>
+      </div>
+      <div class="consent">
+        <input type="checkbox" id="verificacao" name="verificacao" required />
+        <label for="verificacao">Autorizo a verificação das informações de formação, certificação e antecedentes que informei, necessária para compor meu Score de Excelência.</label>
+      </div>
+      <div class="consent">
+        <input type="checkbox" id="marketing" name="marketing" />
+        <label for="marketing">Quero receber novidades, dicas e oportunidades do KeroPro por e-mail <span class="optional">(opcional)</span></label>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg btn-block" id="submit-btn">Enviar cadastro para análise</button>
+      <p style="text-align:center;font-size:12.5px;color:var(--dim-on-light);margin-top:16px">
+        Já tem uma conta? <a href="#" style="text-decoration:underline;color:var(--ink)">Entrar</a>
+      </p>
+    </form>
+  </div>
+
+  <!-- ============================= SIDEBAR ============================= -->
+  <aside class="auth-side-col">
+    <div>
+      <a href="index.html" class="brand"><img src="assets/logo-mark.png" alt="KeroPro" /><span class="brand-word">KeroPro</span></a>
+      <h3 style="font-size:24px;margin-top:34px;line-height:1.25">Sua formação vale mais aqui.</h3>
+      <div class="security-list">
+        <div class="security-item"><i data-icon="gauge"></i><div><strong>Score de Excelência</strong><span>Formação, certificações, avaliações e tempo de resposta compõem seu ranqueamento.</span></div></div>
+        <div class="security-item"><i data-icon="lock"></i><div><strong>Senha criptografada</strong><span>Armazenada com hash BCrypt — nunca em texto puro.</span></div></div>
+        <div class="security-item"><i data-icon="shield"></i><div><strong>Verificação manual</strong><span>Nossa equipe confere formação e certificações antes da liberação do perfil.</span></div></div>
+        <div class="security-item"><i data-icon="briefcase"></i><div><strong>Painel de pedidos</strong><span>Depois de aprovado, você recebe chamados por região direto no seu painel.</span></div></div>
+      </div>
+    </div>
+    <div class="pill pill-dark" style="align-self:flex-start;margin-top:40px"><i data-icon="shield"></i> Cadastro gratuito · análise em até 48h</div>
+  </aside>
+</div>
+
+<script src="js/icons.js"></script>
+<script src="js/validation.js"></script>
+<script src="js/auth-api.js"></script>
+<script src="js/cadastro-prestador.js"></script>
+</body>
+</html>

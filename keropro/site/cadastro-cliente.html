@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#071b3a" />
+<title>Criar conta de cliente — KeroPro</title>
+<meta name="description" content="Crie sua conta de cliente no KeroPro e contrate técnicos verificados perto de você." />
+<link rel="icon" type="image/png" href="assets/favicon.png" />
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/variables.css" />
+<link rel="stylesheet" href="css/base.css" />
+<link rel="stylesheet" href="css/components.css" />
+<link rel="stylesheet" href="css/pages.css" />
+</head>
+<body>
+
+<header class="auth-header">
+  <div class="container">
+    <a href="index.html" class="brand"><img src="assets/logo-mark.png" alt="KeroPro" /><span class="brand-word">KeroPro</span></a>
+    <a href="cadastro-prestador.html" class="btn btn-ghost-dark">É profissional? Cadastre-se aqui</a>
+  </div>
+</header>
+
+<div class="auth-layout">
+  <!-- ============================= FORM ============================= -->
+  <div class="auth-form-col">
+    <div class="auth-kicker">CADASTRO · CLIENTE</div>
+    <h1 class="auth-title">Crie sua conta para contratar</h1>
+    <p class="auth-subtitle">Leva menos de dois minutos. Seus dados são usados apenas para conectar você aos profissionais certos.</p>
+
+    <div class="form-msg" id="form-msg"></div>
+
+    <form id="cliente-form" novalidate>
+      <!-- honeypot anti-bot: campo invisível, humano nunca preenche -->
+      <div class="hp-field"><label>Deixe em branco</label><input type="text" name="website" tabindex="-1" autocomplete="off" /></div>
+
+      <fieldset class="fieldset">
+        <legend>Dados pessoais</legend>
+        <div class="form-grid">
+          <div class="field span-2">
+            <label for="nome">Nome completo</label>
+            <input id="nome" name="nome" type="text" autocomplete="name" required />
+            <span class="field-error">Informe seu nome completo.</span>
+          </div>
+          <div class="field">
+            <label for="cpf">CPF</label>
+            <input id="cpf" name="cpf" type="text" inputmode="numeric" placeholder="000.000.000-00" required />
+            <span class="field-error">CPF inválido.</span>
+          </div>
+          <div class="field">
+            <label for="nascimento">Data de nascimento</label>
+            <input id="nascimento" name="nascimento" type="date" required />
+            <span class="field-error">É necessário ter 18 anos ou mais.</span>
+          </div>
+          <div class="field span-2">
+            <label for="email">E-mail</label>
+            <input id="email" name="email" type="email" autocomplete="email" required />
+            <span class="field-error">Informe um e-mail válido.</span>
+          </div>
+          <div class="field span-2">
+            <label for="telefone">Telefone / WhatsApp</label>
+            <input id="telefone" name="telefone" type="tel" inputmode="numeric" placeholder="(15) 90000-0000" required />
+            <span class="field-error">Informe um telefone válido com DDD.</span>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="fieldset">
+        <legend>Endereço</legend>
+        <div class="form-grid">
+          <div class="field">
+            <label for="cep">CEP</label>
+            <input id="cep" name="cep" type="text" inputmode="numeric" placeholder="00000-000" required />
+            <span class="field-error">Informe um CEP válido.</span>
+          </div>
+          <div class="field">
+            <label for="estado">Estado</label>
+            <select id="estado" name="estado" required>
+              <option value="SP" selected>São Paulo</option>
+              <option value="RJ">Rio de Janeiro</option>
+              <option value="MG">Minas Gerais</option>
+              <option value="PR">Paraná</option>
+              <option value="SC">Santa Catarina</option>
+              <option value="RS">Rio Grande do Sul</option>
+              <option value="OUTRO">Outro</option>
+            </select>
+          </div>
+          <div class="field span-2">
+            <label for="cidade">Cidade</label>
+            <input id="cidade" name="cidade" type="text" value="Sorocaba" required />
+          </div>
+          <div class="field span-2">
+            <label for="logradouro">Rua / Avenida</label>
+            <input id="logradouro" name="logradouro" type="text" required />
+            <span class="field-error">Informe o logradouro.</span>
+          </div>
+          <div class="field">
+            <label for="numero">Número</label>
+            <input id="numero" name="numero" type="text" required />
+            <span class="field-error">Informe o número.</span>
+          </div>
+          <div class="field">
+            <label for="complemento">Complemento <span class="optional">opcional</span></label>
+            <input id="complemento" name="complemento" type="text" />
+          </div>
+          <div class="field span-2">
+            <label for="bairro">Bairro</label>
+            <input id="bairro" name="bairro" type="text" required />
+            <span class="field-error">Informe o bairro.</span>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="fieldset">
+        <legend>Segurança da conta</legend>
+        <div class="form-grid">
+          <div class="field">
+            <label for="senha">Senha</label>
+            <input id="senha" name="senha" type="password" autocomplete="new-password" required />
+            <div class="pw-strength" id="pw-strength">
+              <div class="pw-strength-bar"></div><div class="pw-strength-bar"></div><div class="pw-strength-bar"></div><div class="pw-strength-bar"></div>
+            </div>
+            <div class="pw-strength-label" id="pw-strength-label">Mínimo de 8 caracteres, misture letras, números e símbolos.</div>
+            <span class="field-error">A senha deve ter ao menos 8 caracteres.</span>
+          </div>
+          <div class="field">
+            <label for="confirmar-senha">Confirmar senha</label>
+            <input id="confirmar-senha" name="confirmarSenha" type="password" autocomplete="new-password" required />
+            <span class="field-error">As senhas não conferem.</span>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="consent">
+        <input type="checkbox" id="termos" name="termos" required />
+        <label for="termos">Li e concordo com os <a href="#">Termos de Uso</a> e a <a href="#">Política de Privacidade</a> do KeroPro.</label>
+      </div>
+      <div class="consent">
+        <input type="checkbox" id="lgpd" name="lgpd" required />
+        <label for="lgpd">Autorizo o tratamento dos meus dados pessoais conforme a <strong>LGPD</strong>, para os fins de intermediação de serviços descritos na política de privacidade.</label>
+      </div>
+      <div class="consent">
+        <input type="checkbox" id="marketing" name="marketing" />
+        <label for="marketing">Quero receber novidades, dicas e promoções do KeroPro por e-mail <span class="optional">(opcional)</span></label>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg btn-block" id="submit-btn">Criar minha conta</button>
+      <p style="text-align:center;font-size:12.5px;color:var(--dim-on-light);margin-top:16px">
+        Já tem uma conta? <a href="#" style="text-decoration:underline;color:var(--ink)">Entrar</a>
+      </p>
+    </form>
+  </div>
+
+  <!-- ============================= SIDEBAR ============================= -->
+  <aside class="auth-side-col">
+    <div>
+      <a href="index.html" class="brand"><img src="assets/logo-mark.png" alt="KeroPro" /><span class="brand-word">KeroPro</span></a>
+      <h3 style="font-size:24px;margin-top:34px;line-height:1.25">Sua conta, protegida do primeiro ao último clique.</h3>
+      <div class="security-list">
+        <div class="security-item"><i data-icon="lock"></i><div><strong>Senha criptografada</strong><span>Armazenada com hash BCrypt — nunca em texto puro, nem para a nossa equipe.</span></div></div>
+        <div class="security-item"><i data-icon="shield"></i><div><strong>Conformidade com a LGPD</strong><span>Coleta mínima de dados, com finalidade declarada e consentimento explícito.</span></div></div>
+        <div class="security-item"><i data-icon="checkCircle"></i><div><strong>Profissionais verificados</strong><span>Todo prestador passa por análise de formação e certificações antes de aparecer para você.</span></div></div>
+        <div class="security-item"><i data-icon="map"></i><div><strong>Localização usada com propósito</strong><span>Seu endereço só é usado para calcular distância e orçamento — nunca compartilhado publicamente.</span></div></div>
+      </div>
+    </div>
+    <div class="pill pill-dark" style="align-self:flex-start;margin-top:40px"><i data-icon="shield"></i> Ambiente criptografado (HTTPS)</div>
+  </aside>
+</div>
+
+<script src="js/icons.js"></script>
+<script src="js/validation.js"></script>
+<script src="js/auth-api.js"></script>
+<script src="js/cadastro-cliente.js"></script>
+</body>
+</html>

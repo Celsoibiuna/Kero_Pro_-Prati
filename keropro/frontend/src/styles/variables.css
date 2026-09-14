@@ -1,0 +1,16 @@
+/* Design tokens do KeroPro — paleta "instrumento técnico de medição" */
+:root {
+  --bg: #071b3a;
+  --surface: #0b2447;
+  --surface-2: #10305c;
+  --line: #25324459;
+  --accent: #f5a623;   /* âmbar — sinalização técnica */
+  --accent-2: #00a3e0;  /* teal — confirmação/andamento */
+  --text: #f5f3ee;
+  --dim: #9aa5b1;
+  --danger: #e2574c;
+
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "IBM Plex Sans", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}

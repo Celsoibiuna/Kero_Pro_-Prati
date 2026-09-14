@@ -1,0 +1,38 @@
+/* =====================================================================
+   KeroPro — design tokens do site institucional
+   Mesma identidade do app (navy + âmbar, Space Grotesk / IBM Plex),
+   estendida para um layout editorial com alternância de seções claras
+   e escuras.
+===================================================================== */
+:root {
+  /* marca */
+  --navy:        #071b3a;
+  --navy-2:      #0b2447;
+  --navy-3:      #10305c;
+  --cream:       #f7f5f0;
+  --cream-2:     #efece3;
+  --line-dark:   #ffffff1a;
+  --line-light:  #071b3a17;
+  --accent:      #f5a623;
+  --accent-dim:  #f5a62326;
+  --accent-2:    #00a3e0;
+  --danger:      #e2574c;
+  --success:     #3fa66a;
+
+  --ink:         #071b3a;   /* texto sobre fundo claro */
+  --paper:       #f5f3ee;   /* texto sobre fundo escuro */
+  --dim-on-dark: #9aa5b1;
+  --dim-on-light:#5c6470;
+
+  /* tipografia */
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "IBM Plex Sans", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+
+  /* escala */
+  --container: 1160px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 26px;
+  --shadow-lg: 0 40px 80px -30px rgba(11,18,29,0.35);
+}
