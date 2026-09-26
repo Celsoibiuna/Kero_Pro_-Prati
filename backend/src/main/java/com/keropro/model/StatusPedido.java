@@ -4,6 +4,7 @@ package com.keropro.model;
 public enum StatusPedido {
     PENDENTE,
     ACEITO,
+    RECUSADO,
     A_CAMINHO,
     EM_EXECUCAO,
     CONCLUIDO

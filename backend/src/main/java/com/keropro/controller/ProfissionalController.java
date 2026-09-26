@@ -1,12 +1,25 @@
 package com.keropro.controller;
 
+import com.keropro.dto.ErroDTO;
+import com.keropro.dto.LocalizacaoRequestDTO;
 import com.keropro.dto.ProfissionalDTO;
+import com.keropro.model.Pedido;
 import com.keropro.model.Profissional;
 import com.keropro.model.ScoreProfissional;
+import com.keropro.model.StatusPedido;
+import com.keropro.repository.PedidoRepository;
 import com.keropro.repository.ProfissionalRepository;
+import com.keropro.security.AuthenticatedUser;
 import com.keropro.service.OrcamentoService;
+import com.keropro.service.PedidoEventoService;
 import com.keropro.service.ScoreService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,16 +34,25 @@ import java.util.List;
 @RestController
 public class ProfissionalController {
 
+    private static final List<StatusPedido> STATUS_ATIVOS =
+            List.of(StatusPedido.ACEITO, StatusPedido.A_CAMINHO, StatusPedido.EM_EXECUCAO);
+
     private final ProfissionalRepository profissionalRepository;
+    private final PedidoRepository pedidoRepository;
     private final ScoreService scoreService;
     private final OrcamentoService orcamentoService;
+    private final PedidoEventoService pedidoEventoService;
 
     public ProfissionalController(ProfissionalRepository profissionalRepository,
+                                   PedidoRepository pedidoRepository,
                                    ScoreService scoreService,
-                                   OrcamentoService orcamentoService) {
+                                   OrcamentoService orcamentoService,
+                                   PedidoEventoService pedidoEventoService) {
         this.profissionalRepository = profissionalRepository;
+        this.pedidoRepository = pedidoRepository;
         this.scoreService = scoreService;
         this.orcamentoService = orcamentoService;
+        this.pedidoEventoService = pedidoEventoService;
     }
 
     @GetMapping("/api/profissionais")
@@ -48,6 +70,35 @@ public class ProfissionalController {
                 .map(p -> toDTO(p, clienteLat, clienteLng, emergencia))
                 .sorted(Comparator.comparingInt(ProfissionalDTO::getScore).reversed())
                 .toList();
+    }
+
+    /**
+     * O profissional envia sua posição atual (captada via GPS nativo no app) enquanto
+     * está a caminho ou em execução de um serviço. A posição é persistida e replicada
+     * em tempo real para o mapa de acompanhamento de cada pedido ativo desse profissional.
+     */
+    @PatchMapping("/api/profissionais/localizacao")
+    public ResponseEntity<?> atualizarLocalizacao(@Valid @RequestBody LocalizacaoRequestDTO body,
+                                                   @AuthenticationPrincipal AuthenticatedUser usuario) {
+        if (usuario == null || !"PROFISSIONAL".equals(usuario.tipo())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(new ErroDTO("Apenas profissionais podem atualizar a própria localização."));
+        }
+
+        Profissional profissional = profissionalRepository.findById(usuario.id()).orElse(null);
+        if (profissional == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErroDTO("Profissional não encontrado."));
+        }
+
+        profissional.setLatitude(body.getLatitude());
+        profissional.setLongitude(body.getLongitude());
+        profissionalRepository.save(profissional);
+
+        List<Pedido> pedidosAtivos = pedidoRepository.findByProfissional_IdAndStatusIn(usuario.id(), STATUS_ATIVOS);
+        pedidosAtivos.forEach(pedido ->
+                pedidoEventoService.publicarLocalizacao(pedido.getId(), body.getLatitude(), body.getLongitude()));
+
+        return ResponseEntity.noContent().build();
     }
 
     private ProfissionalDTO toDTO(Profissional p, double clienteLat, double clienteLng, boolean emergencia) {
