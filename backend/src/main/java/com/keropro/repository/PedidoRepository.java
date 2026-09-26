@@ -10,4 +10,6 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     List<Pedido> findByProfissional_IdAndStatus(Long profissionalId, StatusPedido status);
 
     List<Pedido> findByCliente_IdOrderByCriadoEmDesc(Long clienteId);
+
+    List<Pedido> findByProfissional_IdAndStatusIn(Long profissionalId, List<StatusPedido> status);
 }

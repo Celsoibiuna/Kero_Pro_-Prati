@@ -16,18 +16,19 @@ public class PedidoService {
 
     private static final Map<StatusPedido, StatusPedido> PROXIMO_STATUS = new EnumMap<>(StatusPedido.class);
     static {
-        PROXIMO_STATUS.put(StatusPedido.PENDENTE, StatusPedido.ACEITO);
+        // PENDENTE não entra aqui: a transição inicial é feita pelos endpoints
+        // dedicados /aceitar e /recusar, que também conferem posse do pedido.
         PROXIMO_STATUS.put(StatusPedido.ACEITO, StatusPedido.A_CAMINHO);
         PROXIMO_STATUS.put(StatusPedido.A_CAMINHO, StatusPedido.EM_EXECUCAO);
         PROXIMO_STATUS.put(StatusPedido.EM_EXECUCAO, StatusPedido.CONCLUIDO);
     }
 
-    /** Retorna o próximo status válido, ou o status atual se já estiver concluído. */
+    /** Retorna o próximo status válido, ou o status atual se não houver uma próxima etapa definida. */
     public StatusPedido avancar(StatusPedido atual) {
-        return PROXIMO_STATUS.getOrDefault(atual, StatusPedido.CONCLUIDO);
+        return PROXIMO_STATUS.getOrDefault(atual, atual);
     }
 
     public boolean podeAvancar(StatusPedido atual) {
-        return atual != StatusPedido.CONCLUIDO;
+        return PROXIMO_STATUS.containsKey(atual);
     }
 }
